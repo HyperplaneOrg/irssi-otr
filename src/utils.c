@@ -20,9 +20,22 @@
 
 #include <assert.h>
 #include <string.h>
-
 #include "otr.h"
 #include "utils.h"
+
+/* These propogate from the irssi headers, undef 
+ * the irssi's defs here as these are not needed    */
+#undef PACKAGE_URL
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_TARNAME
+#undef PACKAGE_STRING
+#undef PACKAGE_VERSION
+#undef VERSION
+
+#ifdef HAVE_CONFIG_H
+ #include <config.h>
+#endif 
 
 /*
  * Left trim a string.
@@ -62,6 +75,23 @@ static char *rtrim(char *s)
 end:
 	return s;
 }
+
+#ifndef HAVE_STRNDUP
+char *strndup(const char *s, size_t n)
+{
+  char *result;
+  size_t len = strlen(s);
+
+  if (n < len)
+    len = n;
+
+  if ((result = (char*) malloc (len + 1)) == NULL)
+    return 0;
+
+  result[len] = '\0';
+  return (char *) memcpy (result, s, len);
+}
+#endif
 
 /*
  * Trim whitespaces in front and back of the string.
