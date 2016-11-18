@@ -1,8 +1,13 @@
-#! /bin/sh
+#!/bin/sh
 
 set -x
-if [ ! -e config ]; then
-	mkdir config
+mkdir -p config
+# test for autoreconf, if it is available use it else warn and then exit
+command -v autoreconf >/dev/null 2>&1  || { 
+   echo "autoreconf not found, trying installing gnu autotools, e.g. https://www.gnu.org/software/autoconf/" >&2
+   exit 1;
+}
+if [ ! -z "$ACLOCAL_PATH" ]; then
+   echo "NOTICE USING \$ACLOCAL_PATH=$ACLOCAL_PATH" >&2
 fi
-
 autoreconf -i -s
