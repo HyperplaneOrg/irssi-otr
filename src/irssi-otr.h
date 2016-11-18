@@ -24,22 +24,22 @@
 
 #define UOFF_T_LONG_LONG 1
 
-#include <src/common.h>
-#include <src/core/commands.h>
-#include <src/core/modules.h>
-#include <src/core/servers.h>
-#include <src/core/signals.h>
-#include <src/core/levels.h>
-#include <src/core/queries.h>
-#include <src/fe-common/core/printtext.h>
-#include <src/fe-common/core/fe-windows.h>
-#include <src/core/modules.h>
-#include <src/core/settings.h>
-#include <src/irc/core/irc.h>
-#include <src/irc/core/irc-commands.h>
-#include <src/irc/core/irc-queries.h>
-#include <src/irc/core/irc-servers.h>
-#include <src/fe-text/statusbar-item.h>
+#include <irssi/src/common.h>
+#include <irssi/src/core/commands.h>
+#include <irssi/src/core/modules.h>
+#include <irssi/src/core/servers.h>
+#include <irssi/src/core/signals.h>
+#include <irssi/src/core/levels.h>
+#include <irssi/src/core/queries.h>
+#include <irssi/src/fe-common/core/printtext.h>
+#include <irssi/src/fe-common/core/fe-windows.h>
+#include <irssi/src/core/modules.h>
+#include <irssi/src/core/settings.h>
+#include <irssi/src/irc/core/irc.h>
+#include <irssi/src/irc/core/irc-commands.h>
+#include <irssi/src/irc/core/irc-queries.h>
+#include <irssi/src/irc/core/irc-servers.h>
+#include <irssi/src/fe-text/statusbar-item.h>
 
 /* Ease our life a bit. */
 #define get_client_config_dir	get_irssi_dir
