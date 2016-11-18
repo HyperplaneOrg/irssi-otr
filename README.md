@@ -41,7 +41,7 @@ Run the following commands to compile and install.
 The ACLOCAL_PATH shell variable may need to be set prior to running the bootstrap script inorder 
 to find the necessary m4 macros. An alternate example of the above command:
 
-`$ACLOCAL_PATH="/opt/devstuff/share/aclocal/:/usr/local/share/aclocal/" ./bootstrap`
+`$ ACLOCAL_PATH="/opt/devstuff/share/aclocal/:/usr/local/share/aclocal/" ./bootstrap`
 
 
 `$ ./configure --prefix=/usr`
@@ -49,7 +49,7 @@ to find the necessary m4 macros. An alternate example of the above command:
 One may need to supply the --with-irssi-headers option as the irssi header files install layout is a bit unruly, this can help
 the configuration step. An alternate example of the above command:
 
-`$ ./configure --prefix=/usr --with-irssi-headers=/opt/devstuff/include LDFLAGS=-L/opt/devstuff/lib  PKG_CONFIG_PATH=/opt/devstuff/lib/pkgconfig
+`$ ./configure --prefix=/usr --with-irssi-headers=/opt/devstuff/include LDFLAGS=-L/opt/devstuff/lib  PKG_CONFIG_PATH=/opt/devstuff/lib/pkgconfig`
 
 `$ make && make install`
 
