@@ -29,6 +29,7 @@ cscope.*
 
 config/
 !config/libotr.m4
+!config/attributes.m4
 
 irssi-otr.spec
 rpmbuild/
