@@ -1,17 +1,6 @@
 AM_CFLAGS = $(LIBOTR_CFLAGS) $(LIBGCRYPT_CFLAGS) $(PACKAGE_FLAGS)
 
-IRSSI_DIST=$(oldincludedir)/irssi
-IRSSI_INCLUDE = -I$(IRSSI_DIST) \
-				-I$(IRSSI_DIST)/src \
-				-I$(IRSSI_DIST)/src/fe-common/core \
-				-I$(IRSSI_DIST)/src/core \
-				-I$(IRSSI_DIST)/src/fe-text \
-				-I$(IRSSI_DIST)/src/irc \
-				-I$(IRSSI_DIST)/src/irc/core \
-				-I$(IRSSI_DIST)/src/irc/dcc \
-				-I$(IRSSI_DIST)/src/irc/notifylist
-
-AM_CPPFLAGS = -I$(top_srcdir)/src $(IRSSI_INCLUDE)
+AM_CPPFLAGS = -I$(top_srcdir)/src 
 
 plugindir = $(IRSSI_MODULE_DIR)
 plugin_LTLIBRARIES = libotr.la
