@@ -1,7 +1,6 @@
 #!/bin/sh
 
 set -x
-mkdir -p config
 # test for autoreconf, if it is available use it else warn and then exit
 command -v autoreconf >/dev/null 2>&1  || { 
    echo "autoreconf not found, trying installing gnu autotools, e.g. https://www.gnu.org/software/autoconf/" >&2
