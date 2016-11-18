@@ -4,6 +4,7 @@ AC_CANONICAL_TARGET
 AC_CANONICAL_HOST
 AC_CONFIG_MACRO_DIR([config])
 AM_INIT_AUTOMAKE([foreign dist-bzip2 no-dist-gzip])
+AC_CONFIG_HEADERS([config.h])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_PROG_GREP
@@ -38,33 +39,40 @@ PKG_CHECK_MODULES(GMODULE, [$pkg_modules])
 
 LIBS="$LIBS"
 
-PACKAGE_CFLAGS="$GMODULE_CFLAGS -Wall -Werror=format-security"
+PACKAGE_CFLAGS="$GMODULE_CFLAGS"
 AC_SUBST(PACKAGE_CFLAGS)
+CPPFLAGS="$CPPFLAGS $PACKAGE_CFLAGS"
 
-# Checking only a few Irssi headers is enough to tell that everything is
-# available. This is broken I know but tell that to the irssi guys to NOT use
-# cluster fu*** of headers and local inclusion system wide...
-CPPFLAGS="$CPPFLAGS $PACKAGE_CFLAGS -I$IRSSI_HEADER_DIR"
-AC_CHECK_HEADERS([\
-				irssi/src/common.h \
-				irssi/src/core/commands.h \
-				irssi/src/core/modules.h \
-				irssi/src/core/servers.h \
-				irssi/src/core/signals.h \
-				irssi/src/core/levels.h \
-				irssi/src/core/queries.h \
-				irssi/src/core/settings.h \
-				], [], [AC_MSG_ERROR([Irssi Header files are needed])],
-[
-#include <irssi/irssi-config.h>
-#ifdef HAVE_IRSSI_SRC_COMMON_H
-#include <irssi/src/common.h>
-#endif
-])
+if test "\"\"" = "$IRSSI_HEADER_DIR"; then
+    AC_MSG_WARN([the --with-irssi-headers header option was not set])
+else
+   # A hack to Set some odd include flags here as irssi has an unconventional way of installing it's header files
+   CPPFLAGS="$CPPFLAGS -I$IRSSI_HEADER_DIR -I$IRSSI_HEADER_DIR/irssi -I$IRSSI_HEADER_DIR/irssi/src/fe-common/core"
+   CPPFLAGS="$CPPFLAGS -I$IRSSI_HEADER_DIR/irssi/src/core -I$IRSSI_HEADER_DIR/irssi/src"
+fi
+# Check for the two required irssi headers initially 
+AC_CHECK_HEADERS([irssi/irssi-config.h irssi/irssi-version.h], [] ,[AC_MSG_ERROR([Irssi header files are required])], [])
+# Check for the other irssi headers 
+AC_CHECK_HEADER([irssi/src/common.h], [] ,[AC_MSG_ERROR([Irssi Header files are needed])], 
+   [ #define HAVE_CONFIG_H
+     #include <irssi/irssi-config.h>
+     #include <irssi/irssi-version.h>
+   ])
+# There are more irssi headers that could be checked but checking for them here would be redundant
 
 LT_INIT
 
-CFLAGS="-Wall $CFLAGS -g -fno-strict-aliasing -fstack-protector-all -D_FORTIFY_SOURCE=2 -O1 -Wl,-z,relro,-z,now -fPIE -pie $PACKAGE_CFLAGS"
+# Test what compile flags are appropriate for the given platform/compiler
+CC_CHECK_CFLAG_APPEND([-Wall])
+CC_CHECK_CFLAG_APPEND([-g])
+CC_CHECK_CFLAG_APPEND([-fno-strict-aliasing])
+CC_CHECK_CFLAG_APPEND([-fstack-protector-all])
+CC_CHECK_CFLAG_APPEND([-fPIE])
+CC_CHECK_CFLAG_APPEND([-pie])
+CC_CHECK_CFLAG_APPEND([-Werror=format-security])
+CC_CHECK_CFLAG_APPEND([-v])
+CFLAGS="$CFLAGS -D_FORTIFY_SOURCE=2 -DVERSION=\"$MODVERSION\""
+CC_CHECK_LDFLAGS([-Wl,-z,relro,-z,now])
 
 DEFAULT_INCLUDES="-I\$(top_srcdir) -I\$(top_builddir) -I\$(top_builddir)/src -I\$(top_builddir)/include"
 AC_SUBST(DEFAULT_INCLUDES)
@@ -85,8 +93,11 @@ AC_CONFIG_FILES([
 	Makefile
 	help/Makefile
 	src/Makefile
-        irssi-otr.spec
+   irssi-otr.spec
 ])
+
+# Check for common functions
+AC_CHECK_FUNCS([strndup])
 
 AC_OUTPUT
 
