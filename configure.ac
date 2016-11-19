@@ -21,7 +21,7 @@ AC_CHECK_LIB([pthread], [pthread_create], [],
 
 AC_ARG_WITH([irssi-headers],
 	AS_HELP_STRING([--with-irssi-headers],
-	[Directory containing the Irssi header files]),
+	[The include directory prefix for the irssi header files]),
 	[IRSSI_HEADER_DIR="$withval"],
 	[IRSSI_HEADER_DIR="\"\""])
 
@@ -44,9 +44,9 @@ AC_SUBST(PACKAGE_CFLAGS)
 CPPFLAGS="$CPPFLAGS $PACKAGE_CFLAGS"
 
 if test "\"\"" = "$IRSSI_HEADER_DIR"; then
-    AC_MSG_WARN([the --with-irssi-headers header option was not set])
+    AC_MSG_WARN([The --with-irssi-headers option was not set. You may need to set extra CPPFLAGS to find all the irssi headers])
 else
-   # A hack to Set some odd include flags here as irssi has an unconventional way of installing it's header files
+   # A hack to set some odd include flags here as irssi has an unconventional way of installing it's header files
    CPPFLAGS="$CPPFLAGS -I$IRSSI_HEADER_DIR -I$IRSSI_HEADER_DIR/irssi -I$IRSSI_HEADER_DIR/irssi/src/fe-common/core"
    CPPFLAGS="$CPPFLAGS -I$IRSSI_HEADER_DIR/irssi/src/core -I$IRSSI_HEADER_DIR/irssi/src"
 fi
@@ -71,7 +71,7 @@ CC_CHECK_CFLAG_APPEND([-fPIE])
 CC_CHECK_CFLAG_APPEND([-pie])
 CC_CHECK_CFLAG_APPEND([-Werror=format-security])
 CC_CHECK_CFLAG_APPEND([-v])
-CFLAGS="$CFLAGS -D_FORTIFY_SOURCE=2 -DVERSION=\"$MODVERSION\""
+CFLAGS="$CFLAGS -D_FORTIFY_SOURCE=2" 
 CC_CHECK_LDFLAGS([-Wl,-z,relro,-z,now])
 
 DEFAULT_INCLUDES="-I\$(top_srcdir) -I\$(top_builddir) -I\$(top_builddir)/src -I\$(top_builddir)/include"
