@@ -34,7 +34,9 @@
 #include "otr-formats.h"
 #include "utils.h"
 
+# if GCRYPT_VERSION_NUMBER < 0x010600 
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
+# endif 
 
 static const char *signal_args_otr_event[] = {
 	"iobject", "string", "string", NULL
@@ -312,6 +314,7 @@ void irssi_send_message(SERVER_REC *irssi, const char *recipient,
 void otr_init(void)
 {
 	int ret;
+   gcry_error_t err;
 
 	module_register(MODULE_NAME, "core");
 
@@ -322,7 +325,26 @@ void otr_init(void)
 		return;
 	}
 
-	gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
+# if GCRYPT_VERSION_NUMBER < 0x010600
+   if( (err = gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) )
+   {
+      IRSSI_MSG("irssi-otr: gcry_control (GCRYCTL_SET_THREAD_CBS) failed: %s", gcry_strerror (err));
+      return;
+   }
+# endif
+   if( !gcry_check_version(GCRYPT_VERSION) )
+   {
+      IRSSI_MSG("irssi-otr: gcry_check_version(GCRYPT_VERSION) failed");
+      return;
+   }
+   gcry_control(GCRYCTL_SUSPEND_SECMEM_WARN);
+   if ((err = gcry_control(GCRYCTL_INIT_SECMEM, 32768, 0)) )
+   {
+      IRSSI_MSG("irssi-otr: gcry_control (GCRYCTL_INIT_SECMEM) failed: %s", gcry_strerror(err));
+      return;
+   }
+   gcry_control (GCRYCTL_RESUME_SECMEM_WARN);
+   gcry_control (GCRYCTL_INITIALIZATION_FINISHED, 0);
 
 	otr_lib_init();
 
