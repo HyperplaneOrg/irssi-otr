@@ -16,19 +16,19 @@ AM_PROG_LIBTOOL
 
 # Check for pthread
 AC_CHECK_LIB([pthread], [pthread_create], [],
-	[AC_MSG_ERROR([Cannot find libpthread. Use [LDFLAGS]=-Ldir to specify its location.])]
+   [AC_MSG_ERROR([Cannot find libpthread. Use [LDFLAGS]=-Ldir to specify its location.])]
 )
 
 AC_ARG_WITH([irssi-headers],
-	AS_HELP_STRING([--with-irssi-headers],
-	[The include directory prefix for the irssi header files]),
-	[IRSSI_HEADER_DIR="$withval"],
-	[IRSSI_HEADER_DIR="\"\""])
+   AS_HELP_STRING([--with-irssi-headers],
+   [The include directory prefix for the irssi header files]),
+   [IRSSI_HEADER_DIR="$withval"],
+   [IRSSI_HEADER_DIR="\"\""])
 
 # Check for Glib. It needs to be installed anyway or this macro will not be defined.
 AM_PATH_GLIB_2_0([2.22.0], [],
-			[AC_MSG_ERROR([Glib 2.22 is required in order to compile.
-			Please install the Glib development files.])], [gmodule])
+   		[AC_MSG_ERROR([Glib 2.22 is required in order to compile.
+   		Please install the Glib development files.])], [gmodule])
 
 AM_PATH_LIBGCRYPT(1:1.2.0,,AC_MSG_ERROR(libgcrypt 1.2.0 or newer is required.))
 
@@ -83,16 +83,16 @@ AC_SUBST(DEFAULT_INCLUDES)
 # The hardcoded value should work for most systems but you need to override it for
 # e.g. x86_64 Fedora.
 AC_ARG_WITH([irssi-module-dir],
-	AS_HELP_STRING([--with-irssi-module-dir=DIR], [Irssi module directory]),
-	[IRSSI_MODULE_DIR="$withval"],
-	[IRSSI_MODULE_DIR='${libdir}/irssi/modules'])
+   AS_HELP_STRING([--with-irssi-module-dir=DIR], [Irssi module directory]),
+   [IRSSI_MODULE_DIR="$withval"],
+   [IRSSI_MODULE_DIR='${libdir}/irssi/modules'])
 
 AC_SUBST(IRSSI_MODULE_DIR)
 
 AC_CONFIG_FILES([
-	Makefile
-	help/Makefile
-	src/Makefile
+   Makefile
+   help/Makefile
+   src/Makefile
    irssi-otr.spec
 ])
 
@@ -108,15 +108,13 @@ AS_ECHO()
 
 # Target architecture we're building for
 target_arch=$host_cpu
-[
-for f in $CFLAGS; do
-        if test $f = "-m32"; then
-			target_arch="32-bit"
-        elif test $f = "-m64"; then
-			target_arch="64-bit"
-        fi
-done
-]
+[  for f in $CFLAGS; do
+      if test $f = "-m32"; then
+         target_arch="32-bit"
+      elif test $f = "-m64"; then
+         target_arch="64-bit"
+      fi
+   done]
 AS_ECHO_N("Target architecture: ")
 AS_ECHO($target_arch)
 
