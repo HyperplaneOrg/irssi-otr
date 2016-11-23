@@ -325,26 +325,30 @@ void otr_init(void)
 		return;
 	}
 
+   if( !gcry_control (GCRYCTL_ANY_INITIALIZATION_P) )
+   {
+      IRSSI_DEBUG("Initializing gcrypt facility...");
 # if GCRYPT_VERSION_NUMBER < 0x010600
-   if( (err = gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) )
-   {
-      IRSSI_MSG("irssi-otr: gcry_control (GCRYCTL_SET_THREAD_CBS) failed: %s", gcry_strerror (err));
-      return;
-   }
+      if( (err = gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) )
+      {
+         IRSSI_MSG("irssi-otr: gcry_control (GCRYCTL_SET_THREAD_CBS) failed: %s", gcry_strerror (err));
+         return;
+      }
 # endif
-   if( !gcry_check_version(GCRYPT_VERSION) )
-   {
-      IRSSI_MSG("irssi-otr: gcry_check_version(GCRYPT_VERSION) failed");
-      return;
+      if( !gcry_check_version(GCRYPT_VERSION) )
+      {
+         IRSSI_MSG("irssi-otr: gcry_check_version(GCRYPT_VERSION) failed");
+         return;
+      }
+      gcry_control(GCRYCTL_SUSPEND_SECMEM_WARN);
+      if ((err = gcry_control(GCRYCTL_INIT_SECMEM, 32768, 0)) )
+      {
+         IRSSI_MSG("irssi-otr: gcry_control (GCRYCTL_INIT_SECMEM) failed: %s", gcry_strerror(err));
+         return;
+      }
+      gcry_control (GCRYCTL_RESUME_SECMEM_WARN);
+      gcry_control (GCRYCTL_INITIALIZATION_FINISHED, 0);
    }
-   gcry_control(GCRYCTL_SUSPEND_SECMEM_WARN);
-   if ((err = gcry_control(GCRYCTL_INIT_SECMEM, 32768, 0)) )
-   {
-      IRSSI_MSG("irssi-otr: gcry_control (GCRYCTL_INIT_SECMEM) failed: %s", gcry_strerror(err));
-      return;
-   }
-   gcry_control (GCRYCTL_RESUME_SECMEM_WARN);
-   gcry_control (GCRYCTL_INITIALIZATION_FINISHED, 0);
 
 	otr_lib_init();
 

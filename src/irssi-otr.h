@@ -41,6 +41,16 @@
 #include <irssi/src/irc/core/irc-servers.h>
 #include <irssi/src/fe-text/statusbar-item.h>
 
+/* Note: VERSION, PACKAGE_NAME, etc... defs will propogate from irssi's 
+ * headers here so one may see redefined macro warnings when buiding,
+ * so we clear there here and use the defs for "this" package. */
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING 
+#undef PACKAGE_TARNAME 
+#undef PACKAGE_URL
+#undef PACKAGE_VERSION
+
 /* Ease our life a bit. */
 #define get_client_config_dir	get_irssi_dir
 

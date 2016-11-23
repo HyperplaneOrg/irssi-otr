@@ -23,8 +23,6 @@
 #include "otr.h"
 #include "utils.h"
 
-/* Note: VERSION, PACKAGE_NAME, etc... defs will propogate from the irssi's 
- * header here so one will see redefined macro warnings when buiding. */
 #ifdef HAVE_CONFIG_H
  #include <config.h>
 #endif 
